@@ -20,6 +20,14 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final NoticeRepository noticeRepository;
 
+    /**
+     * 채용공고 등록
+     *
+     * @param id  회사 id
+     * @param dto 채용공고 등록 dto 객체
+     * @return 저장된 채용공고
+     * @throws CustomException COMPANY_NOT_FOUND
+     */
     public Notice createNotice(Long id, CreateNoticeDto dto) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new CustomException(COMPANY_NOT_FOUND));
         Notice notice = Notice.createNotice(company, dto.position(), dto.reward(), dto.content(), dto.techStack());

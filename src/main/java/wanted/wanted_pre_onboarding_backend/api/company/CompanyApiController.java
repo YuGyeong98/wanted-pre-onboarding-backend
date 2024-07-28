@@ -22,6 +22,13 @@ public class CompanyApiController {
 
     private final CompanyService companyService;
 
+    /**
+     * 채용공고 등록
+     *
+     * @param id      회사 id
+     * @param request 채용공고 등록 요청 객체
+     * @return 201 CREATED, 400 BAD_REQUEST, 404 NOT_FOUND
+     */
     @PostMapping("/api/notices/{id}")
     public ResponseEntity<CreateNoticeResponse> createNotice(@PathVariable Long id, @RequestBody @Valid CreateNoticeRequest request) {
         Notice notice = companyService.createNotice(id, request.toServiceDto());
