@@ -3,7 +3,7 @@ package wanted.wanted_pre_onboarding_backend.service.company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wanted.wanted_pre_onboarding_backend.common.CustomException;
+import wanted.wanted_pre_onboarding_backend.common.exception.CustomException;
 import wanted.wanted_pre_onboarding_backend.domain.Company;
 import wanted.wanted_pre_onboarding_backend.domain.Notice;
 import wanted.wanted_pre_onboarding_backend.repository.CompanyRepository;
@@ -11,10 +11,8 @@ import wanted.wanted_pre_onboarding_backend.repository.NoticeRepository;
 import wanted.wanted_pre_onboarding_backend.service.company.dto.CreateNoticeDto;
 import wanted.wanted_pre_onboarding_backend.service.company.dto.UpdateNoticeDto;
 
-import java.util.NoSuchElementException;
-
-import static wanted.wanted_pre_onboarding_backend.common.ErrorCode.COMPANY_NOT_FOUND;
-import static wanted.wanted_pre_onboarding_backend.common.ErrorCode.NOTICE_NOT_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.COMPANY_NOT_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.NOTICE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

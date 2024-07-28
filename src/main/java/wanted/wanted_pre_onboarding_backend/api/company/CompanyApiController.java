@@ -9,10 +9,11 @@ import wanted.wanted_pre_onboarding_backend.api.company.request.CreateNoticeRequ
 import wanted.wanted_pre_onboarding_backend.api.company.request.UpdateNoticeRequest;
 import wanted.wanted_pre_onboarding_backend.api.company.response.CreateNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.api.company.response.UpdateNoticeResponse;
+import wanted.wanted_pre_onboarding_backend.common.response.SuccessResponse;
 import wanted.wanted_pre_onboarding_backend.domain.Notice;
 import wanted.wanted_pre_onboarding_backend.service.company.CompanyService;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static wanted.wanted_pre_onboarding_backend.common.constant.SuccessCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,11 +30,10 @@ public class CompanyApiController {
      * @return 201 CREATED, 400 BAD_REQUEST, 404 NOT_FOUND
      */
     @PostMapping("/api/notices/{id}")
-    public ResponseEntity<CreateNoticeResponse> createNotice(@PathVariable Long id, @RequestBody @Valid CreateNoticeRequest request) {
+    public ResponseEntity<SuccessResponse<CreateNoticeResponse>> createNotice(@PathVariable Long id, @RequestBody @Valid CreateNoticeRequest request) {
         Notice notice = companyService.createNotice(id, request.toServiceDto());
         CreateNoticeResponse response = new CreateNoticeResponse(notice);
-        return ResponseEntity.status(CREATED)
-                .body(response);
+        return SuccessResponse.toResponseEntity(NOTICE_CREATED, response);
     }
 
     /**
@@ -44,10 +44,10 @@ public class CompanyApiController {
      * @return 200 OK, 400 BAD_REQUEST, 404 NOT_FOUND
      */
     @PutMapping("/api/notices/{id}")
-    public ResponseEntity<UpdateNoticeResponse> updateNotice(@PathVariable Long id, @RequestBody @Valid UpdateNoticeRequest request) {
+    public ResponseEntity<SuccessResponse<UpdateNoticeResponse>> updateNotice(@PathVariable Long id, @RequestBody @Valid UpdateNoticeRequest request) {
         Notice notice = companyService.updateNotice(id, request.toServiceDto());
         UpdateNoticeResponse response = new UpdateNoticeResponse(notice);
-        return ResponseEntity.ok(response);
+        return SuccessResponse.toResponseEntity(NOTICE_UPDATED, response);
     }
 
     /**
@@ -57,8 +57,8 @@ public class CompanyApiController {
      * @return 200 OK, 404 NOT_FOUND
      */
     @DeleteMapping("/api/notices/{id}")
-    public ResponseEntity<String> deleteNotice(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<Object>> deleteNotice(@PathVariable Long id) {
         companyService.deleteNotice(id);
-        return ResponseEntity.ok("채용공고가 삭제되었습니다.");
+        return SuccessResponse.toResponseEntity(NOTICE_DELETED);
     }
 }
