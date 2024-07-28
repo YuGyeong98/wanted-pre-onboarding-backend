@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.COMPANY_NOT_FOUND;
 import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.NOTICE_NOT_FOUND;
 
@@ -101,6 +101,37 @@ class CompanyServiceTest {
 
         // when
         CustomException exception = assertThrows(CustomException.class, () -> companyService.updateNotice(id, dto));
+
+        // then
+        assertThat(exception.getErrorCode()).isEqualTo(NOTICE_NOT_FOUND);
+    }
+
+    @DisplayName("회사 채용공고가 존재하면 삭제한다.")
+    @Test
+    void companyDeleteNoticeIfPresent() {
+        // given
+        Long id = 1L;
+        Notice notice = new Notice("백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+
+        when(noticeRepository.findById(any())).thenReturn(Optional.of(notice));
+
+        // when
+        companyService.deleteNotice(id);
+
+        // then
+        verify(noticeRepository, times(1)).delete(notice);
+    }
+
+    @DisplayName("등록되지 않은 채용공고를 삭제하면 예외가 발생한다.")
+    @Test
+    void notFoundNoticeDeleteNoticeThrowsException() {
+        // given
+        Long id = 1L;
+
+        when(noticeRepository.findById(any())).thenReturn(Optional.empty());
+
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> companyService.deleteNotice(id));
 
         // then
         assertThat(exception.getErrorCode()).isEqualTo(NOTICE_NOT_FOUND);
