@@ -49,4 +49,16 @@ public class CompanyApiController {
         UpdateNoticeResponse response = new UpdateNoticeResponse(notice);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 채용공고 삭제
+     *
+     * @param id 채용공고 id
+     * @return 200 OK, 404 NOT_FOUND
+     */
+    @DeleteMapping("/api/notices/{id}")
+    public ResponseEntity<String> deleteNotice(@PathVariable Long id) {
+        companyService.deleteNotice(id);
+        return ResponseEntity.ok("채용공고가 삭제되었습니다.");
+    }
 }
