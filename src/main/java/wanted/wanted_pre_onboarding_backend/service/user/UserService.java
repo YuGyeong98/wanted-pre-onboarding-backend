@@ -35,6 +35,16 @@ public class UserService {
     }
 
     /**
+     * 채용공고 검색
+     *
+     * @param searchCondition 검색 조건
+     * @return 검색 조건을 포함하는 채용공고
+     */
+    public List<Notice> searchNotices(String searchCondition) {
+        return noticeRepository.search(searchCondition);
+    }
+
+    /**
      * 채용공고 상세페이지 조회
      *
      * @param id 채용공고 id
