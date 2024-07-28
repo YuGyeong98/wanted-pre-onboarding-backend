@@ -11,6 +11,8 @@ import wanted.wanted_pre_onboarding_backend.repository.NoticeRepository;
 import wanted.wanted_pre_onboarding_backend.service.company.dto.CreateNoticeDto;
 import wanted.wanted_pre_onboarding_backend.service.company.dto.UpdateNoticeDto;
 
+import java.util.NoSuchElementException;
+
 import static wanted.wanted_pre_onboarding_backend.common.ErrorCode.COMPANY_NOT_FOUND;
 import static wanted.wanted_pre_onboarding_backend.common.ErrorCode.NOTICE_NOT_FOUND;
 
@@ -48,5 +50,17 @@ public class CompanyService {
         Notice notice = noticeRepository.findById(id).orElseThrow(() -> new CustomException(NOTICE_NOT_FOUND));
         notice.updateNotice(dto.getPosition(), dto.getReward(), dto.getContent(), dto.getTechStack());
         return notice;
+    }
+
+    /**
+     * 채용공고 삭제
+     *
+     * @param id 채용공고 id
+     * @throws CustomException NOTICE_NOT_FOUND
+     */
+    public void deleteNotice(Long id) {
+        noticeRepository.findById(id).ifPresentOrElse(noticeRepository::delete, () -> {
+            throw new CustomException(NOTICE_NOT_FOUND);
+        });
     }
 }
