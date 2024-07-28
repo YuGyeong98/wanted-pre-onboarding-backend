@@ -2,10 +2,7 @@ package wanted.wanted_pre_onboarding_backend.api.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wanted.wanted_pre_onboarding_backend.api.user.response.ApplyNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeDetailResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeResponse;
@@ -34,6 +31,19 @@ public class UserApiController {
         List<Notice> notices = userService.findNotices();
         List<FindNoticeResponse> response = notices.stream().map(FindNoticeResponse::new).toList();
         return SuccessResponse.toResponseEntity(NOTICES_FOUND, response);
+    }
+
+    /**
+     * 채용공고 검색
+     *
+     * @param searchCondition 검색 조건
+     * @return 200 OK
+     */
+    @GetMapping("/api/notices/search")
+    public ResponseEntity<SuccessResponse<List<FindNoticeResponse>>> searchNotices(@RequestParam String searchCondition) {
+        List<Notice> notices = userService.searchNotices(searchCondition);
+        List<FindNoticeResponse> response = notices.stream().map(FindNoticeResponse::new).toList();
+        return SuccessResponse.toResponseEntity(NOTICE_SEARCH_FOUND, response);
     }
 
     /**
