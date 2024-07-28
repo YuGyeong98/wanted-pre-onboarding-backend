@@ -4,17 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wanted.wanted_pre_onboarding_backend.api.user.response.ApplyNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeDetailResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.common.response.SuccessResponse;
+import wanted.wanted_pre_onboarding_backend.domain.ApplyHistory;
 import wanted.wanted_pre_onboarding_backend.domain.Notice;
 import wanted.wanted_pre_onboarding_backend.service.user.UserService;
 
 import java.util.List;
 
-import static wanted.wanted_pre_onboarding_backend.common.constant.SuccessCode.NOTICES_FOUND;
-import static wanted.wanted_pre_onboarding_backend.common.constant.SuccessCode.NOTICE_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.SuccessCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,5 +47,19 @@ public class UserApiController {
         Notice notice = userService.findNotice(id);
         FindNoticeDetailResponse response = new FindNoticeDetailResponse(notice);
         return SuccessResponse.toResponseEntity(NOTICE_FOUND, response);
+    }
+
+    /**
+     * 채용공고 지원
+     *
+     * @param userId   사용자 id
+     * @param noticeId 채용공고 id
+     * @return 200 OK, 404 NOT_FOUND
+     */
+    @PostMapping("/api/users/{userId}/notices/{noticeId}")
+    public ResponseEntity<SuccessResponse<ApplyNoticeResponse>> applyNotice(@PathVariable Long userId, @PathVariable Long noticeId) {
+        ApplyHistory applyHistory = userService.applyNotice(userId, noticeId);
+        ApplyNoticeResponse response = new ApplyNoticeResponse(applyHistory);
+        return SuccessResponse.toResponseEntity(NOTICE_APPLIED, response);
     }
 }
