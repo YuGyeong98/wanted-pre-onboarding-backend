@@ -10,7 +10,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    COMPANY_NOT_FOUND(NOT_FOUND, "해당 id를 가진 회사가 없습니다.");
+    COMPANY_NOT_FOUND(NOT_FOUND, "해당 id를 가진 회사가 없습니다."),
+    NOTICE_NOT_FOUND(NOT_FOUND, "해당 id를 가진 채용공고가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

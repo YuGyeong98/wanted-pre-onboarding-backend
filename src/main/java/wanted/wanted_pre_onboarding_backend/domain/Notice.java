@@ -50,4 +50,12 @@ public class Notice {
         notice.setCompany(company);
         return notice;
     }
+
+    // 비즈니스 로직
+    public void updateNotice(String position, int reward, String content, String techStack) {
+        this.position = position;
+        this.reward = reward;
+        this.content = content;
+        this.techStack = techStack;
+    }
 }
