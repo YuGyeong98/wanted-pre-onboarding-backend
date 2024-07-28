@@ -1,4 +1,4 @@
-package wanted.wanted_pre_onboarding_backend.common;
+package wanted.wanted_pre_onboarding_backend.common.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import wanted.wanted_pre_onboarding_backend.common.response.ErrorResponse;
 
 import java.util.Objects;
 

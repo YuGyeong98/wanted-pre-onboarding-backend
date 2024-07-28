@@ -1,4 +1,4 @@
-package wanted.wanted_pre_onboarding_backend.common;
+package wanted.wanted_pre_onboarding_backend.common.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
