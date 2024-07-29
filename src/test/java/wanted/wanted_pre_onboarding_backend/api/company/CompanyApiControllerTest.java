@@ -11,7 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import wanted.wanted_pre_onboarding_backend.api.company.request.CreateNoticeRequest;
+import wanted.wanted_pre_onboarding_backend.api.company.request.UpdateNoticeRequest;
 import wanted.wanted_pre_onboarding_backend.api.company.response.CreateNoticeResponse;
+import wanted.wanted_pre_onboarding_backend.api.company.response.UpdateNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomException;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomExceptionHandler;
 import wanted.wanted_pre_onboarding_backend.domain.Company;
@@ -22,11 +24,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.COMPANY_NOT_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.NOTICE_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class CompanyApiControllerTest {
@@ -109,5 +113,65 @@ class CompanyApiControllerTest {
         // then
         resultActions.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("해당 id를 가진 회사가 없습니다."));
+    }
+
+    @DisplayName("회사가 채용공고 수정을 성공하면 200을 반환한다.")
+    @Test
+    void companyUpdateNoticeSuccessReturn200() throws Exception {
+        // given
+        Long id = 1L;
+
+        UpdateNoticeRequest request = new UpdateNoticeRequest();
+        request.setPosition("백엔드 주니어 개발자");
+        request.setReward(1000000);
+        request.setContent("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
+        request.setTechStack("Python");
+
+        Notice notice = new Notice("백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+
+        UpdateNoticeResponse response = new UpdateNoticeResponse(notice);
+
+        when(companyService.updateNotice(any(), any())).thenReturn(notice);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/notices/{id}", id)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("채용공고가 수정되었습니다."))
+                .andExpect(jsonPath("$.data.position").value(response.getPosition()))
+                .andExpect(jsonPath("$.data.reward").value(response.getReward()))
+                .andExpect(jsonPath("$.data.content").value(response.getContent()))
+                .andExpect(jsonPath("$.data.techStack").value(response.getTechStack()));
+    }
+
+    @DisplayName("등록되지 않은 채용공고를 수정하면 404를 반환한다.")
+    @Test
+    void notFoundNoticeUpdateNoticeReturn404() throws Exception {
+        // given
+        Long id = 1L;
+
+        CreateNoticeRequest request = new CreateNoticeRequest();
+        request.setPosition("백엔드 주니어 개발자");
+        request.setReward(1000000);
+        request.setContent("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
+        request.setTechStack("Python");
+
+        when(companyService.updateNotice(any(), any())).thenThrow(new CustomException(NOTICE_NOT_FOUND));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/notices/{id}", id)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        resultActions.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("해당 id를 가진 채용공고가 없습니다."));
     }
 }
