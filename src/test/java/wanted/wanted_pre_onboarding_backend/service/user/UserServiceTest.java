@@ -54,6 +54,23 @@ class UserServiceTest {
         assertThat(notices.size()).isEqualTo(2);
     }
 
+    @DisplayName("사용자가 채용공고 검색을 하면 검색 조건을 포함하는 채용공고를 반환한다.")
+    @Test
+    void userSearchNoticesReturnSearchConditionNotices() {
+        // given
+        String searchCondition = "개발자";
+        Notice notice1 = new Notice("백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+        Notice notice2 = new Notice("프론트엔드 주니어 개발자", 1000000, "원티드랩에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "Javascript");
+
+        when(noticeRepository.search(any())).thenReturn(List.of(notice1, notice2));
+
+        // when
+        List<Notice> notices = userService.searchNotices(searchCondition);
+
+        // then
+        assertThat(notices.size()).isEqualTo(2);
+    }
+
     @DisplayName("사용자가 채용공고 상세페이지를 조회한다.")
     @Test
     void userFindNotice() {
