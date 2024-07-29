@@ -1,6 +1,5 @@
 package wanted.wanted_pre_onboarding_backend.api.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import wanted.wanted_pre_onboarding_backend.api.user.response.ApplyNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeDetailResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeResponse;
-import wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomException;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomExceptionHandler;
 import wanted.wanted_pre_onboarding_backend.domain.ApplyHistory;
@@ -113,6 +111,38 @@ class UserApiControllerTest {
                 .andExpect(jsonPath("$.data[0].position").value(response.getPosition()))
                 .andExpect(jsonPath("$.data[0].reward").value(response.getReward()))
                 .andExpect(jsonPath("$.data[0].techStack").value(response.getTechStack()));
+    }
+
+    @DisplayName("사용자가 채용공고 상세페이지 조회를 성공하면 200을 반환한다.")
+    @Test
+    void userFindNoticeSuccessReturn200() throws Exception {
+        // given
+        Long id = 1L;
+
+        Company company = new Company("원티드랩", "한국", "서울");
+        Notice notice = new Notice(id, "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+        notice.setCompany(company);
+
+        FindNoticeDetailResponse response = new FindNoticeDetailResponse(notice);
+
+        when(userService.findNotice(any())).thenReturn(notice);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/notices/{id}", id)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("채용공고 상세페이지 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data.noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.data.name").value(response.getName()))
+                .andExpect(jsonPath("$.data.country").value(response.getCountry()))
+                .andExpect(jsonPath("$.data.region").value(response.getRegion()))
+                .andExpect(jsonPath("$.data.position").value(response.getPosition()))
+                .andExpect(jsonPath("$.data.reward").value(response.getReward()))
+                .andExpect(jsonPath("$.data.techStack").value(response.getTechStack()))
+                .andExpect(jsonPath("$.data.content").value(response.getContent()));
     }
 
     @DisplayName("사용자가 채용공고 지원을 성공하면 201을 반환한다.")

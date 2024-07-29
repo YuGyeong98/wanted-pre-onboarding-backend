@@ -38,6 +38,14 @@ public class Notice {
         this.techStack = techStack;
     }
 
+    public Notice(Long id, String position, int reward, String content, String techStack) {
+        this.id = id;
+        this.position = position;
+        this.reward = reward;
+        this.content = content;
+        this.techStack = techStack;
+    }
+
     // 연관관계 편의 메소드
     public void setCompany(Company company) {
         this.company = company;
