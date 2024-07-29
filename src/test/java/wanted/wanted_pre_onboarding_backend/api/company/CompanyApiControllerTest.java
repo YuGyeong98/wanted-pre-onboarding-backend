@@ -21,10 +21,9 @@ import wanted.wanted_pre_onboarding_backend.domain.Notice;
 import wanted.wanted_pre_onboarding_backend.service.company.CompanyService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -168,6 +167,42 @@ class CompanyApiControllerTest {
                 put("/api/notices/{id}", id)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        resultActions.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("해당 id를 가진 채용공고가 없습니다."));
+    }
+
+    @DisplayName("회사가 채용공고 삭제를 성공하면 200을 반환한다.")
+    @Test
+    void companyDeleteNoticeSuccessReturn200() throws Exception {
+        // given
+        Long id = 1L;
+
+        doNothing().when(companyService).deleteNotice(any());
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/notices/{id}", id)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("채용공고가 삭제되었습니다."));
+    }
+
+    @DisplayName("등록되지 않은 채용공고를 삭제하면 404를 반환한다.")
+    @Test
+    void notFoundNoticeDeleteNoticeReturn404() throws Exception {
+        // given
+        Long id = 1L;
+
+        doThrow(new CustomException(NOTICE_NOT_FOUND)).when(companyService).deleteNotice(any());
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/notices/{id}", id)
         );
 
         // then
