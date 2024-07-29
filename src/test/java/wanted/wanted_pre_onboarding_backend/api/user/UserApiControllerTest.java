@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeDetailResponse;
 import wanted.wanted_pre_onboarding_backend.api.user.response.FindNoticeResponse;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomExceptionHandler;
 import wanted.wanted_pre_onboarding_backend.domain.Company;
@@ -18,6 +19,7 @@ import wanted.wanted_pre_onboarding_backend.service.user.UserService;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -64,6 +66,38 @@ class UserApiControllerTest {
         // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("채용공고 목록 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data[0].noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.data[0].name").value(response.getName()))
+                .andExpect(jsonPath("$.data[0].country").value(response.getCountry()))
+                .andExpect(jsonPath("$.data[0].region").value(response.getRegion()))
+                .andExpect(jsonPath("$.data[0].position").value(response.getPosition()))
+                .andExpect(jsonPath("$.data[0].reward").value(response.getReward()))
+                .andExpect(jsonPath("$.data[0].techStack").value(response.getTechStack()));
+    }
+
+    @DisplayName("사용자가 채용공고 검색을 성공하면 200을 반환한다.")
+    @Test
+    void userSearchNoticesSuccessReturn200() throws Exception {
+        // given
+        String searchCondition = "원티드";
+
+        Company company = new Company("원티드랩", "한국", "서울");
+        Notice notice = new Notice("백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+        notice.setCompany(company);
+
+        FindNoticeResponse response = new FindNoticeResponse(notice);
+
+        when(userService.searchNotices(any())).thenReturn(List.of(notice, notice));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/notices/search")
+                        .param("searchCondition", searchCondition)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("채용공고 검색이 완료되었습니다."))
                 .andExpect(jsonPath("$.data[0].noticeId").value(response.getNoticeId()))
                 .andExpect(jsonPath("$.data[0].name").value(response.getName()))
                 .andExpect(jsonPath("$.data[0].country").value(response.getCountry()))
