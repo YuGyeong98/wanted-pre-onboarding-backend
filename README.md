@@ -1,7 +1,5 @@
 # wanted-pre-onboarding-backend
 
----
-
 ## 프로젝트 소개
 
 기업 채용을 위한 웹 서비스입니다.
@@ -33,23 +31,30 @@
 ## 주요 기능
 
 1. 회사 채용공고 등록
+    - POST `/api/notices/{companyId}`
 2. 회사 채용공고 수정
+    - PUT `/api/notices/{noticeId}`
 3. 회사 채용공고 삭제
+    - DELETE `/api/notices/{noticeId}`
 4. 사용자 채용공고 목록 조회
+    - GET `/api/users/notices`
 5. 사용자 채용공고 검색
+    - GET `/api/users/notices/search?searchCondition=검색조건`
 6. 사용자 채용공고 상세페이지 조회
+    - GET `/api/users/notices/{noticeId}`
 7. 사용자 채용공고 지원
+    - POST `/api/users/{userId}/notices/{noticeId}`
 
 ## 디렉토리 구조
 
 ```
 wanted_pre_onboarding_backend
- ┣ api ----------------------------------- api 컨트롤러
+ ┣ api ---------------------------------------- api 컨트롤러
  ┃ ┣ company
- ┃ ┃ ┣ request --------------------------- 요청
+ ┃ ┃ ┣ request -------------------------------- 요청
  ┃ ┃ ┃ ┣ CreateNoticeRequest.java
  ┃ ┃ ┃ ┗ UpdateNoticeRequest.java
- ┃ ┃ ┣ response -------------------------- 응답
+ ┃ ┃ ┣ response ------------------------------- 응답
  ┃ ┃ ┃ ┣ CreateNoticeResponse.java
  ┃ ┃ ┃ ┗ UpdateNoticeResponse.java
  ┃ ┃ ┗ CompanyApiController.java
@@ -59,24 +64,22 @@ wanted_pre_onboarding_backend
  ┃ ┃ ┃ ┣ FindNoticeDetailResponse.java
  ┃ ┃ ┃ ┗ FindNoticeResponse.java
  ┃ ┃ ┗ UserApiController.java
- ┣ common -------------------------------- 공통(성공, 에러 응답코드, 예외처리)
+ ┣ common ------------------------------------- 공통(에러 코드, 예외처리)
  ┃ ┣ constant
- ┃ ┃ ┣ ErrorCode.java
- ┃ ┃ ┗ SuccessCode.java
+ ┃ ┃ ┗ ErrorCode.java
  ┃ ┣ exception
  ┃ ┃ ┣ CustomException.java
  ┃ ┃ ┗ CustomExceptionHandler.java
  ┃ ┗ response
- ┃ ┃ ┣ ErrorResponse.java
- ┃ ┃ ┗ SuccessResponse.java
- ┣ config -------------------------------- 설정 정보
+ ┃ ┃ ┗ ErrorResponse.java
+ ┣ config ------------------------------------- 설정 정보
  ┃ ┗ JpaConfig.java
- ┣ domain -------------------------------- 도메인
+ ┣ domain ------------------------------------- 도메인
  ┃ ┣ ApplyHistory.java
  ┃ ┣ Company.java
  ┃ ┣ Notice.java
  ┃ ┗ User.java
- ┣ repository ---------------------------- 레포지토리
+ ┣ repository --------------------------------- 레포지토리
  ┃ ┣ custom
  ┃ ┃ ┣ NoticeCustomRepository.java
  ┃ ┃ ┗ NoticeCustomRepositoryImpl.java
@@ -84,14 +87,14 @@ wanted_pre_onboarding_backend
  ┃ ┣ CompanyRepository.java
  ┃ ┣ NoticeRepository.java
  ┃ ┗ UserRepository.java
- ┣ service ------------------------------- 서비스
+ ┣ service ------------------------------------ 서비스
  ┃ ┣ company
- ┃ ┃ ┣ dto ------------------------------- dto
+ ┃ ┃ ┣ dto ------------------------------------ dto
  ┃ ┃ ┃ ┣ CreateNoticeDto.java
  ┃ ┃ ┃ ┗ UpdateNoticeDto.java
  ┃ ┃ ┗ CompanyService.java
  ┃ ┗ user
  ┃ ┃ ┗ UserService.java
- ┣ InitDb.java --------------------------- 초기 db 설정
+ ┣ InitDb.java -------------------------------- 초기 db 설정
  ┗ WantedPreOnboardingBackendApplication.java
 ```
