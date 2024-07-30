@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wanted.wanted_pre_onboarding_backend.common.exception.CustomException;
 import wanted.wanted_pre_onboarding_backend.domain.ApplyHistory;
+import wanted.wanted_pre_onboarding_backend.domain.Company;
 import wanted.wanted_pre_onboarding_backend.domain.Notice;
 import wanted.wanted_pre_onboarding_backend.domain.User;
 import wanted.wanted_pre_onboarding_backend.repository.ApplyHistoryRepository;
@@ -21,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.NOTICE_NOT_FOUND;
-import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.USER_NOT_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -158,5 +158,29 @@ class UserServiceTest {
 
         // then
         assertThat(exception.getErrorCode()).isEqualTo(NOTICE_NOT_FOUND);
+    }
+
+    @DisplayName("채용공고에 2번 이상 지원하면 예외가 발생한다.")
+    @Test
+    void userApplyTwiceApplyNoticeThrowsException() {
+        // given
+        Long userId = 1L;
+        Long noticeId = 1L;
+
+        User user = new User();
+        Notice notice = new Notice("백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python");
+        ApplyHistory applyHistory = new ApplyHistory(user, notice);
+
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(noticeRepository.findById(any())).thenReturn(Optional.of(notice));
+        when(applyHistoryRepository.save(any())).thenReturn(applyHistory);
+
+        when(applyHistoryRepository.save(any())).thenThrow(new CustomException(USER_APPLY_ONCE));
+
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> userService.applyNotice(userId, noticeId));
+
+        // then
+        assertThat(exception.getErrorCode()).isEqualTo(USER_APPLY_ONCE);
     }
 }

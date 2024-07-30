@@ -30,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.NOTICE_NOT_FOUND;
-import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.USER_NOT_FOUND;
+import static wanted.wanted_pre_onboarding_backend.common.constant.ErrorCode.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserApiControllerTest {
@@ -208,5 +207,24 @@ class UserApiControllerTest {
         // then
         resultActions.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("해당 id를 가진 채용공고가 없습니다."));
+    }
+
+    @DisplayName("채용공고에 2번 이상 지원하면 400을 반환한다.")
+    @Test
+    void userApplyTwiceApplyNoticeReturn400() throws Exception {
+        // given
+        Long userId = 1L;
+        Long noticeId = 1L;
+
+        when(userService.applyNotice(any(), any())).thenThrow(new CustomException(USER_APPLY_ONCE));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/users/{userId}/notices/{noticeId}", userId, noticeId)
+        );
+
+        // then
+        resultActions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("사용자는 1회만 지원 가능합니다."));
     }
 }
