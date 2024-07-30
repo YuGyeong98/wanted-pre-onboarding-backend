@@ -26,7 +26,7 @@ public class UserApiController {
      *
      * @return 200 OK
      */
-    @GetMapping("/api/notices")
+    @GetMapping("/api/users/notices")
     public ResponseEntity<SuccessResponse<List<FindNoticeResponse>>> findNotices() {
         List<Notice> notices = userService.findNotices();
         List<FindNoticeResponse> response = notices.stream().map(FindNoticeResponse::new).toList();
@@ -39,7 +39,7 @@ public class UserApiController {
      * @param searchCondition 검색 조건
      * @return 200 OK
      */
-    @GetMapping("/api/notices/search")
+    @GetMapping("/api/users/notices/search")
     public ResponseEntity<SuccessResponse<List<FindNoticeResponse>>> searchNotices(@RequestParam String searchCondition) {
         List<Notice> notices = userService.searchNotices(searchCondition);
         List<FindNoticeResponse> response = notices.stream().map(FindNoticeResponse::new).toList();
@@ -49,12 +49,12 @@ public class UserApiController {
     /**
      * 채용공고 상세페이지 조회
      *
-     * @param id 채용공고 id
+     * @param noticeId 채용공고 id
      * @return 200 OK, 404 NOT_FOUND
      */
-    @GetMapping("/api/notices/{id}")
-    public ResponseEntity<SuccessResponse<FindNoticeDetailResponse>> findNotice(@PathVariable Long id) {
-        Notice notice = userService.findNotice(id);
+    @GetMapping("/api/users/notices/{noticeId}")
+    public ResponseEntity<SuccessResponse<FindNoticeDetailResponse>> findNotice(@PathVariable Long noticeId) {
+        Notice notice = userService.findNotice(noticeId);
         FindNoticeDetailResponse response = new FindNoticeDetailResponse(notice);
         return SuccessResponse.toResponseEntity(NOTICE_FOUND, response);
     }
