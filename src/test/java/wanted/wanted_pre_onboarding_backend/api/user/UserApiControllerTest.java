@@ -65,19 +65,18 @@ class UserApiControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/notices")
+                get("/api/users/notices")
         );
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("채용공고 목록 조회가 완료되었습니다."))
-                .andExpect(jsonPath("$.data[0].noticeId").value(response.getNoticeId()))
-                .andExpect(jsonPath("$.data[0].name").value(response.getName()))
-                .andExpect(jsonPath("$.data[0].country").value(response.getCountry()))
-                .andExpect(jsonPath("$.data[0].region").value(response.getRegion()))
-                .andExpect(jsonPath("$.data[0].position").value(response.getPosition()))
-                .andExpect(jsonPath("$.data[0].reward").value(response.getReward()))
-                .andExpect(jsonPath("$.data[0].techStack").value(response.getTechStack()));
+                .andExpect(jsonPath("$.[0].noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.[0].name").value(response.getName()))
+                .andExpect(jsonPath("$.[0].country").value(response.getCountry()))
+                .andExpect(jsonPath("$.[0].region").value(response.getRegion()))
+                .andExpect(jsonPath("$.[0].position").value(response.getPosition()))
+                .andExpect(jsonPath("$.[0].reward").value(response.getReward()))
+                .andExpect(jsonPath("$.[0].techStack").value(response.getTechStack()));
     }
 
     @DisplayName("사용자가 채용공고 검색을 성공하면 200을 반환한다.")
@@ -96,20 +95,19 @@ class UserApiControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/notices/search")
+                get("/api/users/notices/search")
                         .param("searchCondition", searchCondition)
         );
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("채용공고 검색이 완료되었습니다."))
-                .andExpect(jsonPath("$.data[0].noticeId").value(response.getNoticeId()))
-                .andExpect(jsonPath("$.data[0].name").value(response.getName()))
-                .andExpect(jsonPath("$.data[0].country").value(response.getCountry()))
-                .andExpect(jsonPath("$.data[0].region").value(response.getRegion()))
-                .andExpect(jsonPath("$.data[0].position").value(response.getPosition()))
-                .andExpect(jsonPath("$.data[0].reward").value(response.getReward()))
-                .andExpect(jsonPath("$.data[0].techStack").value(response.getTechStack()));
+                .andExpect(jsonPath("$.[0].noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.[0].name").value(response.getName()))
+                .andExpect(jsonPath("$.[0].country").value(response.getCountry()))
+                .andExpect(jsonPath("$.[0].region").value(response.getRegion()))
+                .andExpect(jsonPath("$.[0].position").value(response.getPosition()))
+                .andExpect(jsonPath("$.[0].reward").value(response.getReward()))
+                .andExpect(jsonPath("$.[0].techStack").value(response.getTechStack()));
     }
 
     @DisplayName("사용자가 채용공고 상세페이지 조회를 성공하면 200을 반환한다.")
@@ -128,20 +126,19 @@ class UserApiControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/notices/{id}", id)
+                get("/api/users/notices/{noticeId}", id)
         );
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("채용공고 상세페이지 조회가 완료되었습니다."))
-                .andExpect(jsonPath("$.data.noticeId").value(response.getNoticeId()))
-                .andExpect(jsonPath("$.data.name").value(response.getName()))
-                .andExpect(jsonPath("$.data.country").value(response.getCountry()))
-                .andExpect(jsonPath("$.data.region").value(response.getRegion()))
-                .andExpect(jsonPath("$.data.position").value(response.getPosition()))
-                .andExpect(jsonPath("$.data.reward").value(response.getReward()))
-                .andExpect(jsonPath("$.data.techStack").value(response.getTechStack()))
-                .andExpect(jsonPath("$.data.content").value(response.getContent()));
+                .andExpect(jsonPath("$.noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.name").value(response.getName()))
+                .andExpect(jsonPath("$.country").value(response.getCountry()))
+                .andExpect(jsonPath("$.region").value(response.getRegion()))
+                .andExpect(jsonPath("$.position").value(response.getPosition()))
+                .andExpect(jsonPath("$.reward").value(response.getReward()))
+                .andExpect(jsonPath("$.techStack").value(response.getTechStack()))
+                .andExpect(jsonPath("$.content").value(response.getContent()));
     }
 
     @DisplayName("사용자가 채용공고 지원을 성공하면 201을 반환한다.")
@@ -166,9 +163,8 @@ class UserApiControllerTest {
 
         // then
         resultActions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("채용공고 지원이 완료되었습니다."))
-                .andExpect(jsonPath("$.data.noticeId").value(response.getNoticeId()))
-                .andExpect(jsonPath("$.data.userId").value(response.getUserId()));
+                .andExpect(jsonPath("$.noticeId").value(response.getNoticeId()))
+                .andExpect(jsonPath("$.userId").value(response.getUserId()));
     }
 
     @DisplayName("등록되지 않은 사용자가 채용공고를 지원하면 404를 반환한다.")

@@ -80,12 +80,11 @@ class CompanyApiControllerTest {
 
         // then
         resultActions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("채용공고가 등록되었습니다."))
-                .andExpect(jsonPath("$.data.companyId").value(response.getCompanyId()))
-                .andExpect(jsonPath("$.data.position").value(response.getPosition()))
-                .andExpect(jsonPath("$.data.reward").value(response.getReward()))
-                .andExpect(jsonPath("$.data.content").value(response.getContent()))
-                .andExpect(jsonPath("$.data.techStack").value(response.getTechStack()));
+                .andExpect(jsonPath("$.companyId").value(response.getCompanyId()))
+                .andExpect(jsonPath("$.position").value(response.getPosition()))
+                .andExpect(jsonPath("$.reward").value(response.getReward()))
+                .andExpect(jsonPath("$.content").value(response.getContent()))
+                .andExpect(jsonPath("$.techStack").value(response.getTechStack()));
     }
 
     @DisplayName("등록되지 않은 회사가 채용공고를 등록하면 404를 반환한다.")
@@ -141,11 +140,10 @@ class CompanyApiControllerTest {
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("채용공고가 수정되었습니다."))
-                .andExpect(jsonPath("$.data.position").value(response.getPosition()))
-                .andExpect(jsonPath("$.data.reward").value(response.getReward()))
-                .andExpect(jsonPath("$.data.content").value(response.getContent()))
-                .andExpect(jsonPath("$.data.techStack").value(response.getTechStack()));
+                .andExpect(jsonPath("$.position").value(response.getPosition()))
+                .andExpect(jsonPath("$.reward").value(response.getReward()))
+                .andExpect(jsonPath("$.content").value(response.getContent()))
+                .andExpect(jsonPath("$.techStack").value(response.getTechStack()));
     }
 
     @DisplayName("등록되지 않은 채용공고를 수정하면 404를 반환한다.")
@@ -188,8 +186,7 @@ class CompanyApiControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("채용공고가 삭제되었습니다."));
+        resultActions.andExpect(status().isOk());
     }
 
     @DisplayName("등록되지 않은 채용공고를 삭제하면 404를 반환한다.")
